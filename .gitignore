@@ -1,0 +1,11 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor scratch
+*.swp
+*.swo
+*~
+
+# Stow's per-invocation ignore lists (if ever generated locally)
+.stow-local-ignore
