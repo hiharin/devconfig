@@ -1,37 +1,65 @@
 #!/usr/bin/env bash
-# Bootstrap devconfig on a fresh machine:
-#   1. ensure GNU Stow is installed
-#   2. symlink every package into $HOME
-#   3. make sure ~/.zshrc sources ~/.claude-profiles.sh
+# Bootstrap devconfig on macOS, Linux, or WSL2:
+#   1. ensure Homebrew is installed
+#   2. brew bundle          — install everything in ./Brewfile
+#   3. stow the packages    — symlink configs into $HOME
+#   4. ensure ~/.zshrc sources ~/.claude-profiles.sh
 #
-# Safe to re-run. Pass package names to limit scope: ./bootstrap.sh nvim tmux
+# Safe to re-run. Pass package names to limit stow scope:  ./bootstrap.sh nvim tmux
+#
+# Native Windows is not covered here — run this inside WSL2. The only thing that
+# belongs on the Windows host is WezTerm; see README.md.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ "$#" -gt 0 ]; then
-  PACKAGES=("$@")
-else
-  PACKAGES=(nvim tmux wezterm claude)
-fi
 
 info() { printf '\033[36m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[33mwarn:\033[0m %s\n' "$*" >&2; }
 die()  { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
-ensure_stow() {
-  command -v stow >/dev/null 2>&1 && return
-  info "Installing GNU Stow"
-  if command -v brew >/dev/null 2>&1; then
-    brew install stow
-  elif command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update && sudo apt-get install -y stow
-  elif command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y stow
-  elif command -v pacman >/dev/null 2>&1; then
-    sudo pacman -S --noconfirm stow
-  else
-    die "no supported package manager found — install GNU Stow manually, then re-run"
-  fi
+is_wsl() {
+  [ -n "${WSL_DISTRO_NAME:-}" ] || grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null
+}
+
+# WezTerm is configured on the Windows host under WSL, so skip it there.
+if [ "$#" -gt 0 ]; then
+  PACKAGES=("$@")
+elif is_wsl; then
+  PACKAGES=(nvim tmux claude)
+else
+  PACKAGES=(nvim tmux wezterm claude)
+fi
+
+BREW_PATHS=(
+  /opt/homebrew/bin/brew
+  /usr/local/bin/brew
+  /home/linuxbrew/.linuxbrew/bin/brew
+  "$HOME/.linuxbrew/bin/brew"
+)
+
+load_brew() {
+  command -v brew >/dev/null 2>&1 && return 0
+  local p
+  for p in "${BREW_PATHS[@]}"; do
+    if [ -x "$p" ]; then
+      eval "$("$p" shellenv)"
+      return 0
+    fi
+  done
+  return 1
+}
+
+ensure_brew() {
+  load_brew && return
+  info "Installing Homebrew"
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  load_brew || die "Homebrew installed but 'brew' is not on PATH — open a new shell and re-run"
+}
+
+brew_bundle() {
+  info "Installing packages from Brewfile"
+  brew bundle --file="$REPO_DIR/Brewfile"
 }
 
 stow_packages() {
@@ -49,9 +77,19 @@ ensure_zshrc_source() {
   printf '\n# devconfig: Claude Code account profiles\n%s\n' "$line" >> "$rc"
 }
 
-ensure_stow
-stow_packages
-ensure_zshrc_source
+main() {
+  ensure_brew
+  brew_bundle
+  stow_packages
+  ensure_zshrc_source
 
-info "Done. Open a new shell (or 'source ~/.zshrc') to pick up changes."
-command -v wezterm >/dev/null 2>&1 || warn "wezterm not on PATH — install it to use ~/.wezterm.lua"
+  info "Done. Open a new shell (or 'source ~/.zshrc') to pick up changes."
+  command -v nvim >/dev/null 2>&1 &&
+    info "Launch 'nvim' once — mason will install the LSP servers and formatters."
+  if is_wsl; then
+    warn "WSL detected. Install WezTerm on the Windows host and point it at this distro:"
+    warn "  winget install wez.wezterm   (then see README.md)"
+  fi
+}
+
+main
