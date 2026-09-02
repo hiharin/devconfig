@@ -1,6 +1,6 @@
 # devconfig
 
-Personal config files for nvim, tmux, and wezterm, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal config files for nvim, tmux, wezterm, and Claude Code account profiles, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 Each top-level directory is a stow package whose internal path mirrors where it belongs relative to `$HOME`.
 
@@ -10,7 +10,7 @@ Each top-level directory is a stow package whose internal path mirrors where it 
 brew install stow
 git clone <this-repo> ~/projects/devconfig
 cd ~/projects/devconfig
-stow -t ~ nvim tmux wezterm
+stow -t ~ nvim tmux wezterm claude
 ```
 
 This symlinks:
@@ -18,6 +18,13 @@ This symlinks:
 - `nvim/.config/nvim` -> `~/.config/nvim`
 - `tmux/.tmux.conf` -> `~/.tmux.conf`
 - `wezterm/.wezterm.lua` -> `~/.wezterm.lua`
+- `claude/.claude-profiles.sh` -> `~/.claude-profiles.sh`
+
+Then add `source ~/.claude-profiles.sh` to `~/.zshrc` (this line itself isn't stow-managed, since `~/.zshrc` isn't tracked in this repo).
+
+### Claude Code account profiles
+
+`claude/.claude-profiles.sh` defines a `claude-personal` shell alias that runs Claude Code with `CLAUDE_CONFIG_DIR` pointed at `~/.claude-personal`, keeping that account's credentials, settings, and MCP config fully isolated from your default (work) `~/.claude` profile. Plain `claude` keeps using the default profile; run `claude-personal` to use the personal account instead (first run prompts `/login`). Switching requires starting a new `claude` process — there's no live in-session switch.
 
 ## Windows
 
@@ -46,5 +53,5 @@ New-Item -ItemType SymbolicLink -Path "$HOME\.wezterm.lua" -Target "$HOME\projec
 ## Removing links
 
 ```sh
-stow -D -t ~ nvim tmux wezterm
+stow -D -t ~ nvim tmux wezterm claude
 ```
