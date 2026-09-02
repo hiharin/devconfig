@@ -3,7 +3,7 @@
 #   1. ensure Homebrew is installed
 #   2. brew bundle          — install everything in ./Brewfile
 #   3. stow the packages    — symlink configs into $HOME
-#   4. ensure ~/.zshrc sources ~/.claude-profiles.sh
+#   4. ensure ~/.zshrc sources the devconfig shell snippets
 #
 # Safe to re-run. Pass package names to limit stow scope:  ./bootstrap.sh nvim tmux
 #
@@ -25,9 +25,9 @@ is_wsl() {
 if [ "$#" -gt 0 ]; then
   PACKAGES=("$@")
 elif is_wsl; then
-  PACKAGES=(nvim tmux claude)
+  PACKAGES=(nvim tmux claude shell)
 else
-  PACKAGES=(nvim tmux wezterm claude)
+  PACKAGES=(nvim tmux wezterm claude shell)
 fi
 
 BREW_PATHS=(
@@ -67,21 +67,25 @@ stow_packages() {
   stow --dir="$REPO_DIR" --target="$HOME" --restow --verbose "${PACKAGES[@]}"
 }
 
+# Ensure ~/.zshrc sources each given (home-relative) snippet, adding a line
+# only when it isn't referenced already. Existing setups that source
+# ~/.claude-profiles.sh are left untouched.
 ensure_zshrc_source() {
-  local line='source ~/.claude-profiles.sh'
-  local rc="$HOME/.zshrc"
-  if [ -f "$rc" ] && grep -qF 'claude-profiles.sh' "$rc"; then
-    return
-  fi
-  info "Adding '$line' to ~/.zshrc"
-  printf '\n# devconfig: Claude Code account profiles\n%s\n' "$line" >> "$rc"
+  local rc="$HOME/.zshrc" file
+  for file in "$@"; do
+    if [ -f "$rc" ] && grep -qF "$file" "$rc"; then
+      continue
+    fi
+    info "Adding 'source ~/$file' to ~/.zshrc"
+    printf '\n# devconfig\nsource ~/%s\n' "$file" >> "$rc"
+  done
 }
 
 main() {
   ensure_brew
   brew_bundle
   stow_packages
-  ensure_zshrc_source
+  ensure_zshrc_source .claude-profiles.sh .config/devconfig/shell-integration.sh
 
   info "Done. Open a new shell (or 'source ~/.zshrc') to pick up changes."
   command -v nvim >/dev/null 2>&1 &&

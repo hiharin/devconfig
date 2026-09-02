@@ -7,7 +7,7 @@
 #   make check       report which expected tools are installed
 #   make PKG=nvim install   operate on a single package
 
-PACKAGES ?= nvim tmux wezterm claude
+PACKAGES ?= nvim tmux wezterm claude shell
 PKG      ?= $(PACKAGES)
 STOW     ?= stow
 TARGET   ?= $(HOME)
@@ -53,3 +53,6 @@ check:
 	@grep -q 'claude-profiles' $(HOME)/.zshrc 2>/dev/null \
 		&& echo "  ok   ~/.zshrc sources ~/.claude-profiles.sh" \
 		|| echo "  miss ~/.zshrc does not source ~/.claude-profiles.sh (run ./bootstrap.sh)"
+	@grep -q 'devconfig/shell-integration.sh' $(HOME)/.zshrc 2>/dev/null \
+		&& echo "  ok   ~/.zshrc sources shell-integration.sh" \
+		|| echo "  miss ~/.zshrc does not source shell-integration.sh (run ./bootstrap.sh)"

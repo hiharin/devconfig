@@ -1,7 +1,7 @@
 # devconfig
 
-Personal config for nvim, tmux, wezterm, and Claude Code account profiles,
-managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal config for nvim, tmux, wezterm, shell integration, and Claude Code
+account profiles, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 Each top-level directory is a stow package whose internal path mirrors where it
 belongs relative to `$HOME`.
@@ -19,7 +19,8 @@ cd ~/projects/devconfig
 1. installs Homebrew if it's missing,
 2. runs `brew bundle` to install everything in [`Brewfile`](Brewfile),
 3. stows the packages (symlinks configs into `$HOME`),
-4. adds `source ~/.claude-profiles.sh` to `~/.zshrc` if not already there.
+4. adds `source` lines to `~/.zshrc` for `~/.claude-profiles.sh` and
+   `~/.config/devconfig/shell-integration.sh` if not already there.
 
 Then launch `nvim` once so [mason](https://github.com/mason-org/mason.nvim)
 can install the language servers and formatters.
@@ -91,6 +92,15 @@ account's credentials, settings, and MCP config fully isolated from the default
 `claude-personal` for the personal account (first run prompts `/login`).
 Switching requires a new `claude` process — there's no live in-session switch.
 
+## Shell integration
+
+`shell/.config/devconfig/shell-integration.sh` is sourced from `~/.zshrc` and
+emits an OSC 7 sequence on every `cd`. This tells tmux the pane's working
+directory changed — otherwise `#{pane_current_path}` in the status bar only
+refreshes when pane focus changes, so a bare `cd` shows a stale directory until
+you switch panes and back. WezTerm consumes the same sequence for "new tab /
+split here".
+
 ## Adding a new tool
 
 1. Create a top-level directory named after the tool (e.g. `git/`).
@@ -102,5 +112,5 @@ Switching requires a new `claude` process — there's no live in-session switch.
 ## Removing links
 
 ```sh
-make uninstall          # or: stow -D -t ~ nvim tmux wezterm claude
+make uninstall          # or: stow -D -t ~ nvim tmux wezterm claude shell
 ```
