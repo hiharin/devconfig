@@ -1,9 +1,20 @@
--- LSP: mason installs the servers, mason-lspconfig auto-enables each one
+-- LSP: mason installs the tools, mason-lspconfig auto-enables each server
 -- through Neovim's built-in client (0.11+ vim.lsp API).
+--
+-- mason-tool-installer owns the full "what must exist" list (servers +
+-- formatters + linters, by mason package name) so a fresh checkout on any
+-- OS self-provisions on first launch. conform.nvim (formatting.lua) and the
+-- LSP servers below just consume what it installs.
 
 require('mason').setup()
-require('mason-lspconfig').setup({
-  ensure_installed = { 'lua_ls', 'bashls' },
+require('mason-lspconfig').setup()
+require('mason-tool-installer').setup({
+  ensure_installed = {
+    'lua-language-server',
+    'bash-language-server',
+    'stylua',
+    'shfmt',
+  },
 })
 
 -- Advertise blink.cmp's extra completion capabilities to every server.

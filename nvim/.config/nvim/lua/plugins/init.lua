@@ -19,10 +19,12 @@ vim.pack.add({
   -- Treesitter (master branch: stable classic API)
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'master' },
 
-  -- LSP
+  -- LSP + cross-platform tool management (mason installs servers/formatters/
+  -- linters on macOS, Linux, WSL, and native Windows alike)
   'https://github.com/neovim/nvim-lspconfig',
   { src = 'https://github.com/mason-org/mason.nvim', version = vim.version.range('*') },
   { src = 'https://github.com/mason-org/mason-lspconfig.nvim', version = vim.version.range('*') },
+  'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 
   -- Completion (versioned tag ships a prebuilt fuzzy-matcher binary)
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1') },
