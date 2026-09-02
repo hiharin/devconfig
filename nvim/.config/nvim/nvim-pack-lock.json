@@ -1,0 +1,17 @@
+{
+  "plugins": {
+    "lualine.nvim": {
+      "rev": "221ce6b2d999187044529f49da6554a92f740a96",
+      "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
+    "nvim-web-devicons": {
+      "rev": "5f032a85be210cd1c6ac98861eb3b187ff3bd5eb",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
+    },
+    "token": {
+      "rev": "eea70e4e22fd83759f7a09d1b9e5dcc0b5cad7b4",
+      "src": "https://github.com/ThorstenRhau/token",
+      "version": ">=0.0.0"
+    }
+  }
+}
