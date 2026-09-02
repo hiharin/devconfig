@@ -44,7 +44,7 @@ Three layers, each with one owner:
 |---|---|---|
 | System CLI, language runtimes, GUI apps, fonts | Homebrew | [`Brewfile`](Brewfile) |
 | Editor tools — LSP servers, formatters, linters | mason | `nvim/.config/nvim/lua/plugins/lsp.lua` (`mason-tool-installer` `ensure_installed`) |
-| Compiler for treesitter parsers | OS | `xcode-select --install` / `build-essential` |
+| treesitter parsers | nvim-treesitter (`main`) | needs `tree-sitter-cli` (Brewfile) + a C compiler: `xcode-select --install` / `build-essential` |
 
 The split keeps per-OS package lists small: mason works identically on macOS,
 Linux, WSL, and native Windows, so only runtimes (`node`, `go`) and core CLI

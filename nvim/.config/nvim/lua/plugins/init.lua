@@ -16,8 +16,8 @@ vim.pack.add({
   'https://github.com/nvim-lua/plenary.nvim',
   { src = 'https://github.com/nvim-telescope/telescope.nvim', version = vim.version.range('*') },
 
-  -- Treesitter (master branch: stable classic API)
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'master' },
+  -- Treesitter (main branch: the only branch that supports Neovim 0.12+)
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 
   -- LSP + cross-platform tool management (mason installs servers/formatters/
   -- linters on macOS, Linux, WSL, and native Windows alike)

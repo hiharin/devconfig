@@ -22,6 +22,7 @@ brew "tmux"
 brew "ripgrep"          # telescope live_grep (required), general use
 brew "fd"               # telescope find_files (faster, respects .gitignore)
 brew "fzf"              # fuzzy finder — shell keybindings and nvim helpers
+brew "tree-sitter-cli"  # nvim-treesitter (main branch) compiles parsers with it
 
 # ── Language runtimes ─────────────────────────────────────────────────────────
 # Also the backends mason shells out to when it builds a server from source.
