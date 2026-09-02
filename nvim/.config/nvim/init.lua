@@ -1,18 +1,8 @@
-vim.pack.add({
-  {
-    src = 'https://github.com/ThorstenRhau/token',
-    version = vim.version.range('*'),
-  },
-  'https://github.com/nvim-tree/nvim-web-devicons',
-  'https://github.com/nvim-lualine/lualine.nvim',
-})
+-- Leader keys must be set before any mapping or plugin loads.
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
-vim.o.background = 'dark'
-vim.cmd.colorscheme('token')
-
-require('lualine').setup({
-  options = {
-    theme = 'token',
-    globalstatus = true,
-  },
-})
+require('config.options')
+require('config.keymaps')
+require('config.autocmds')
+require('plugins')
