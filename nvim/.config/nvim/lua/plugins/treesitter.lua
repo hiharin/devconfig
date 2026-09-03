@@ -24,7 +24,7 @@ end
 ts.setup({})
 
 ts.install({
-  'bash', 'c', 'diff', 'lua', 'luadoc', 'markdown', 'markdown_inline',
+  'bash', 'c', 'cpp', 'diff', 'lua', 'luadoc', 'markdown', 'markdown_inline',
   'query', 'vim', 'vimdoc',
 })
 
