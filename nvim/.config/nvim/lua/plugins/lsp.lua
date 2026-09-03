@@ -26,7 +26,7 @@ vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       runtime = { version = 'LuaJIT' },
-      workspace = { checkThirdParty = false },
+      workspace = { checkThirdParty = false, preloadFileSize = 2000 },
       diagnostics = { globals = { 'vim' } },
       telemetry = { enable = false },
     },
