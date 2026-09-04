@@ -25,3 +25,5 @@ elif [ -n "${BASH_VERSION:-}" ]; then
   esac
   _devconfig_osc7_cwd
 fi
+
+alias nv='nvim'
