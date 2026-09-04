@@ -14,6 +14,12 @@ config.font_size = wezterm.target_triple:find 'linux' and 10.0 or 13.0
 config.line_height = 1.05
 config.window_padding = { left = 8, right = 8, top = 8, bottom = 4 }
 config.window_decorations = 'TITLE | RESIZE'
+-- Native Wayland CSD move/resize is unreliable under GNOME's current mutter
+-- (thin resize borders, and the titlebar sometimes won't drag at all); run
+-- under XWayland instead so the window manager handles move/resize hit-testing.
+-- Safe now that wezterm is a native package (not flatpak) with real X11/Xauthority
+-- passthrough — the flatpak sandbox lacked that, which is why this was reverted before.
+config.enable_wayland = false
 config.scrollback_lines = 50000
 config.audible_bell = 'Disabled'
 
