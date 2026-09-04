@@ -100,6 +100,33 @@ brew_bundle() {
   brew bundle --file="$REPO_DIR/Brewfile"
 }
 
+WEZTERM_KEYRING=/usr/share/keyrings/wezterm-fury.gpg
+WEZTERM_APT_LIST=/etc/apt/sources.list.d/wezterm.list
+
+# Homebrew has no Linux formula for WezTerm, and even the distro-native apt
+# option matters: the `wezterm` (stable) package is frozen at a Feb 2024 build
+# with a GNOME/Wayland bug where CSD move/resize hit-testing is unreliable
+# (see wezterm/.wezterm.lua's enable_wayland comment) — `wezterm-nightly` has
+# the fix. Skipped under WSL, where WezTerm runs on the Windows host instead.
+install_wezterm_linux() {
+  command -v wezterm >/dev/null 2>&1 && return
+  command -v apt-get >/dev/null 2>&1 || {
+    warn "No apt-get found — install WezTerm manually (see README.md's Linux section)."
+    return
+  }
+  info "Installing wezterm-nightly from WezTerm's apt repo"
+  if [ ! -f "$WEZTERM_KEYRING" ]; then
+    curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o "$WEZTERM_KEYRING"
+    sudo chmod 644 "$WEZTERM_KEYRING"
+  fi
+  if [ ! -f "$WEZTERM_APT_LIST" ]; then
+    echo "deb [signed-by=$WEZTERM_KEYRING] https://apt.fury.io/wez/ * *" |
+      sudo tee "$WEZTERM_APT_LIST" >/dev/null
+  fi
+  sudo apt-get update
+  sudo apt-get install -y wezterm-nightly
+}
+
 stow_packages() {
   info "Stowing: ${PACKAGES[*]}"
   stow --dir="$REPO_DIR" --target="$HOME" --restow --verbose "${PACKAGES[@]}"
@@ -123,6 +150,7 @@ ensure_rc_source() {
 main() {
   ensure_brew
   brew_bundle
+  is_linux && install_wezterm_linux
   stow_packages
   ensure_rc_source .claude-profiles.sh .config/devconfig/shell-integration.sh
 
@@ -132,9 +160,6 @@ main() {
   if is_wsl; then
     warn "WSL detected. Install WezTerm on the Windows host and point it at this distro:"
     warn "  winget install wez.wezterm   (then see README.md)"
-  elif is_linux && ! command -v wezterm >/dev/null 2>&1; then
-    warn "Linux desktop detected. Homebrew has no Linux build of WezTerm —"
-    warn "  install it from the apt repo (see README.md's Linux section)."
   fi
 }
 

@@ -86,17 +86,19 @@ Two things Homebrew can't hand you on Linux:
 - **Fonts.** Install a Nerd Font (the wezterm config expects JetBrains Mono)
   through your distro's package manager.
 - **WezTerm.** Homebrew only ships a macOS cask for it — there's no Linux
-  formula. On a native Linux desktop (not WSL), install it from WezTerm's own
-  apt repo instead:
+  formula. On a native Linux desktop (not WSL), `bootstrap.sh` installs it
+  itself from WezTerm's own apt repo (requires `apt-get`; you'll get a sudo
+  prompt the first time). It installs `wezterm-nightly`, not the `wezterm`
+  stable package — stable is frozen at a Feb 2024 build with a GNOME/Wayland
+  bug where CSD move/resize hit-testing is unreliable; nightly has the fix
+  (see `wezterm/.wezterm.lua`'s `enable_wayland` comment). To install by hand
+  instead:
 
   ```sh
   curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
   echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
-  sudo apt update && sudo apt install wezterm
+  sudo apt update && sudo apt install wezterm-nightly
   ```
-
-  `bootstrap.sh` still stows `~/.wezterm.lua` for you either way, so the
-  config is in place once the binary is.
 
 Everything else — `stow`, clipboard support for nvim (`xclip` + `wl-clipboard`,
 covering both X11 and Wayland sessions), editor tooling via mason — comes from

@@ -40,9 +40,9 @@ unless OS.mac?
 end
 
 # ── macOS-only GUI apps & fonts ───────────────────────────────────────────────
-# Casks don't exist on Linux / WSL. There, install WezTerm via its own apt
-# repo (native Linux desktop) or on the Windows host (WSL) — see README.md —
-# and fonts through the distro package manager.
+# Casks don't exist on Linux / WSL. There, bootstrap.sh installs WezTerm via
+# its own apt repo (native Linux desktop) — or it's installed on the Windows
+# host (WSL) — see README.md — and fonts come from the distro package manager.
 if OS.mac?
   cask "wezterm"
   cask "claude-code"
