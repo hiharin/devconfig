@@ -1,0 +1,33 @@
+# Overrides GNU Stow's built-in default ignore list for this package (Stow
+# replaces, not merges, the default list once a local one is present — see
+# `info stow`), so it's reproduced here plus our own entries below.
+#
+# CHEATSHEET.md is repo documentation for browsing on GitHub/locally, not a
+# dotfile meant to land in $HOME — it would otherwise collide with nvim's
+# package of the same name.
+
+# Comments and blank lines are allowed.
+
+RCS
+.+,v
+
+CVS
+\.\#.+       # CVS conflict files / emacs lock files
+\.cvsignore
+
+\.svn
+_darcs
+\.hg
+
+\.git
+\.gitignore
+\.gitmodules
+
+.+~          # emacs backup files
+\#.*\#       # emacs autosave files
+
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+^/CHEATSHEET\.md$

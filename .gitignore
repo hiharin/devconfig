@@ -7,8 +7,5 @@ Thumbs.db
 *.swo
 *~
 
-# Stow's per-invocation ignore lists (if ever generated locally)
-.stow-local-ignore
-
 # Claude Code worktrees / local settings
 .claude/

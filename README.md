@@ -19,7 +19,8 @@ cd ~/projects/devconfig
 1. installs Homebrew if it's missing,
 2. runs `brew bundle` to install everything in [`Brewfile`](Brewfile),
 3. stows the packages (symlinks configs into `$HOME`),
-4. adds `source` lines to `~/.zshrc` for `~/.claude-profiles.sh` and
+4. adds `source` lines to your shell rc (`~/.zshrc` on macOS, `~/.bashrc` on
+   most Linux distros — picked from `$SHELL`) for `~/.claude-profiles.sh` and
    `~/.config/devconfig/shell-integration.sh` if not already there.
 
 Then launch `nvim` once so [mason](https://github.com/mason-org/mason.nvim)
@@ -78,10 +79,29 @@ the `claude` profile script are WSL/Unix-only.
 
 ## Linux
 
-The quick start works as-is via [Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux).
-Fonts aren't handled by `brew` there — install a Nerd Font (the wezterm config
-expects JetBrains Mono) through your distro's package manager. This path is less
-exercised than macOS; file issues if something drifts.
+The quick start works as-is via [Homebrew on Linux](https://docs.brew.sh/Homebrew-on-Linux),
+on both bash and zsh — `bootstrap.sh` picks the right rc file from `$SHELL`.
+Two things Homebrew can't hand you on Linux:
+
+- **Fonts.** Install a Nerd Font (the wezterm config expects JetBrains Mono)
+  through your distro's package manager.
+- **WezTerm.** Homebrew only ships a macOS cask for it — there's no Linux
+  formula. On a native Linux desktop (not WSL), install it from WezTerm's own
+  apt repo instead:
+
+  ```sh
+  curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+  echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+  sudo apt update && sudo apt install wezterm
+  ```
+
+  `bootstrap.sh` still stows `~/.wezterm.lua` for you either way, so the
+  config is in place once the binary is.
+
+Everything else — `stow`, clipboard support for nvim (`xclip` + `wl-clipboard`,
+covering both X11 and Wayland sessions), editor tooling via mason — comes from
+the Brewfile like on macOS. This path is less exercised than macOS; file
+issues if something drifts.
 
 ## Claude Code account profiles
 

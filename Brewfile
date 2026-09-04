@@ -30,9 +30,19 @@ brew "node"             # bash-language-server and other npm-based LSP servers
 brew "go"               # shfmt, gopls, … via `go install`
 brew "uv"               # Python tooling, pyright virtualenvs
 
+# ── Linux-only: clipboard providers ───────────────────────────────────────────
+# nvim's `unnamedplus` (options.lua) needs one of these on PATH to reach the
+# system clipboard. macOS gets this for free via pbcopy/pbpaste; install both
+# here since which one works depends on the session (X11 vs Wayland).
+unless OS.mac?
+  brew "xclip"        # X11
+  brew "wl-clipboard"  # Wayland (wl-copy/wl-paste)
+end
+
 # ── macOS-only GUI apps & fonts ───────────────────────────────────────────────
-# Casks don't exist on Linux / WSL. There, install WezTerm on the Windows host
-# (`winget install wez.wezterm`) and fonts through the distro package manager.
+# Casks don't exist on Linux / WSL. There, install WezTerm via its own apt
+# repo (native Linux desktop) or on the Windows host (WSL) — see README.md —
+# and fonts through the distro package manager.
 if OS.mac?
   cask "wezterm"
   cask "claude-code"
