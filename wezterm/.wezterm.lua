@@ -10,7 +10,7 @@ config.font = wezterm.font_with_fallback {
   'Consolas',
   'monospace',
 }
-config.font_size = 13.0
+config.font_size = wezterm.target_triple:find 'linux' and 10.0 or 13.0
 config.line_height = 1.05
 config.window_padding = { left = 8, right = 8, top = 8, bottom = 4 }
 config.window_decorations = 'TITLE | RESIZE'
