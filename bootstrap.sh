@@ -109,7 +109,7 @@ WEZTERM_APT_LIST=/etc/apt/sources.list.d/wezterm.list
 # (see wezterm/.wezterm.lua's enable_wayland comment) — `wezterm-nightly` has
 # the fix. Skipped under WSL, where WezTerm runs on the Windows host instead.
 install_wezterm_linux() {
-  command -v wezterm >/dev/null 2>&1 && return
+  dpkg -s wezterm-nightly >/dev/null 2>&1 && return
   command -v apt-get >/dev/null 2>&1 || {
     warn "No apt-get found — install WezTerm manually (see README.md's Linux section)."
     return
