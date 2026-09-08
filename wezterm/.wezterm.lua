@@ -23,6 +23,16 @@ config.enable_wayland = false
 config.scrollback_lines = 50000
 config.audible_bell = 'Disabled'
 
+-- Right-click pastes from the clipboard, matching Mac Terminal.app; WezTerm's
+-- own default is to extend/complete the selection instead.
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 1, button = 'Right' } },
+    mods = 'NONE',
+    action = act.PasteFrom 'Clipboard',
+  },
+}
+
 -- ── Tab bar ──────────────────────────────────────────────────────────────────
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
