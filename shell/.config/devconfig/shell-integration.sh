@@ -27,3 +27,4 @@ elif [ -n "${BASH_VERSION:-}" ]; then
 fi
 
 alias nv='nvim'
+alias ll='ls -l'
