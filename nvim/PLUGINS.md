@@ -68,6 +68,12 @@ locked in `nvim-pack-lock.json`. Run `:lua vim.pack.update()` to pull updates.
 **Why:** Consistent formatting without each formatter needing its own bespoke Neovim integration.
 **What it does:** Runs `stylua` for Lua and `shfmt` for shell. Formats on save (500ms timeout), falling back to the LSP's own formatter if no dedicated formatter/binary is available. `<leader>cF` runs it manually.
 
+### render-markdown.nvim
+**What:** Renders markdown inside the buffer — styled headings, bullets, tables, code-block backgrounds, concealed link/emphasis syntax — while the file stays editable.
+**Why:** Most of what gets read in this setup is markdown (READMEs, `CLAUDE.md`, notes); an in-buffer renderer beats a browser preview because it needs no extra process, no build step, and no window switch.
+**What it does:** Un-renders the line the cursor is on so the raw source is always editable. `<leader>um` toggles rendering off/on. LaTeX rendering is explicitly disabled — it shells out to `latex2text`, which isn't in the Brewfile. Uses `nvim-web-devicons` for code-block language icons.
+**Note:** Needs the treesitter `markdown` and `markdown_inline` parsers (both already in the `treesitter.lua` install list).
+
 ## Core config mods (not plugins)
 
 ### `lua/config/options.lua`

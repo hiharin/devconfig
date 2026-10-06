@@ -31,6 +31,9 @@ vim.pack.add({
 
   -- Formatting
   { src = 'https://github.com/stevearc/conform.nvim', version = vim.version.range('*') },
+
+  -- Markdown rendering in-buffer (needs the markdown + markdown_inline parsers)
+  { src = 'https://github.com/MeanderingProgrammer/render-markdown.nvim', version = vim.version.range('*') },
 })
 
 -- Colorscheme
@@ -55,6 +58,15 @@ require('gitsigns').setup({
   end,
 })
 require('which-key').setup()
+
+-- Renders markdown in the buffer (styled headings, bullets, tables, code
+-- blocks) and un-renders the line the cursor is on so it stays editable.
+-- LaTeX rendering is off: it shells out to `latex2text`, which isn't in the
+-- Brewfile, and would error on every `$$` block.
+require('render-markdown').setup({ latex = { enabled = false } })
+vim.keymap.set('n', '<leader>um', function()
+  require('render-markdown').toggle()
+end, { desc = 'Toggle markdown rendering' })
 
 -- Feature modules (order matters: completion before lsp for capabilities)
 require('plugins.treesitter')

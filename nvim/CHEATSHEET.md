@@ -93,3 +93,9 @@ Leader: **`Space`**
 | `Ctrl+Space`   | Open completion menu |
 | `Ctrl+n`/`Ctrl+p`| Select next/previous item |
 | `Ctrl+y`       | Accept selected item |
+
+## Markdown (render-markdown)
+
+| Keys         | Action                              |
+|--------------|---------------------------------------|
+| `<leader>um` | Toggle in-buffer markdown rendering  |
