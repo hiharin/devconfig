@@ -123,6 +123,18 @@ refreshes when pane focus changes, so a bare `cd` shows a stale directory until
 you switch panes and back. WezTerm consumes the same sequence for "new tab /
 split here".
 
+## tmux and herdr
+
+[herdr](https://herdr.dev) is a multiplexer for AI coding agents (persistent
+sessions plus working / blocked / idle status). It's installed from the
+Brewfile with default settings; there is no stow package for it.
+
+Use them for different jobs and **don't nest them**: tmux for general terminal
+work (nvim, shells, logs), herdr for agent sessions, started from a plain
+terminal tab rather than inside tmux. Nesting stacks two sets of prefix keys,
+mouse capture, clipboard handling and terminfo. tmux's prefix is `Ctrl+a`;
+herdr's default is `Ctrl+b`, so the two don't collide.
+
 ## Adding a new tool
 
 1. Create a top-level directory named after the tool (e.g. `git/`).

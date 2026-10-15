@@ -24,6 +24,9 @@ brew "fd"               # telescope find_files (faster, respects .gitignore)
 brew "fzf"              # fuzzy finder — shell keybindings and nvim helpers
 brew "tree-sitter-cli"  # nvim-treesitter (main branch) compiles parsers with it
 
+# ── Agent tooling ─────────────────────────────────────────────────────────────
+brew "herdr"            # multiplexer for AI coding agents — see README.md
+
 # ── Language runtimes ─────────────────────────────────────────────────────────
 # Also the backends mason shells out to when it builds a server from source.
 brew "node"             # bash-language-server and other npm-based LSP servers

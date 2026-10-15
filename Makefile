@@ -38,7 +38,7 @@ restow:
 	$(STOW) --target=$(TARGET) --restow --verbose $(PKG)
 
 check:
-	@for t in stow nvim tmux node rg fd; do \
+	@for t in stow nvim tmux herdr node rg fd; do \
 		if command -v $$t >/dev/null 2>&1; then \
 			printf '  \033[32mok\033[0m   %s (%s)\n' "$$t" "$$(command -v $$t)"; \
 		else \
