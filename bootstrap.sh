@@ -128,6 +128,15 @@ install_wezterm_linux() {
 }
 
 stow_packages() {
+  # If an earlier install only stowed one package that owns a shared
+  # directory (e.g. shell's .config/devconfig), stow folds that directory
+  # into a single symlink. It can't unfold a symlink it owns once a second
+  # package (e.g. tmux) starts contributing to the same directory, so drop
+  # the fold first and let --restow rebuild it as a real directory of
+  # per-file symlinks.
+  local shared_dir="$HOME/.config/devconfig"
+  [ -L "$shared_dir" ] && rm "$shared_dir"
+
   info "Stowing: ${PACKAGES[*]}"
   stow --dir="$REPO_DIR" --target="$HOME" --restow --verbose "${PACKAGES[@]}"
 }
@@ -139,6 +148,8 @@ ensure_rc_source() {
   local rc file
   rc="$(rc_file)"
   for file in "$@"; do
+    # Scoped installs may omit the package that provides this snippet.
+    [ -f "$HOME/$file" ] || continue
     if [ -f "$rc" ] && grep -qF "$file" "$rc"; then
       continue
     fi
