@@ -24,6 +24,7 @@ else
   xclip -selection clipboard -o > "$clipboard"
 fi
 
-# Load from a file to preserve trailing newlines.
+# Load from a file to preserve trailing newlines. -p brackets the paste when
+# the app asks for it, so a multi-line paste is not run line by line.
 tmux -S "$socket" load-buffer -b "$buffer" "$clipboard"
-tmux -S "$socket" paste-buffer -d -b "$buffer" -t "$pane"
+tmux -S "$socket" paste-buffer -p -d -b "$buffer" -t "$pane"
