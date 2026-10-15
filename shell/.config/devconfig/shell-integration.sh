@@ -10,8 +10,10 @@
 # default shell on most Linux distros, zsh on macOS since Catalina.
 
 _devconfig_osc7_cwd() {
+  local previous_status=$?
   # $HOST is zsh's, $HOSTNAME is bash's — cheaper than shelling out to hostname(1).
   printf '\033]7;file://%s%s\033\\' "${HOST:-${HOSTNAME:-}}" "${PWD}"
+  return "$previous_status"
 }
 
 if [ -n "${ZSH_VERSION:-}" ]; then
