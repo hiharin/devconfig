@@ -9,3 +9,6 @@ Thumbs.db
 
 # Claude Code worktrees / local settings
 .claude/
+
+# Local scratch notes, not meant to be shared
+/TODO.md
