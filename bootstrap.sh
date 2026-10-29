@@ -155,20 +155,43 @@ CLAUDE_PLUGINS=(
   mattpocock-skills@claude-plugins-official
 )
 
+# Claude Code plugins to install into the claude-personal profile (~/.claude-personal).
+CLAUDE_PERSONAL_PLUGINS=(
+  mattpocock-skills@claude-plugins-official
+)
+
+# claude_in <config-dir> <args>... — runs claude against a profile; empty means the default.
+claude_in() {
+  local config_dir="$1"
+  shift
+  if [ -n "$config_dir" ]; then
+    CLAUDE_CONFIG_DIR="$config_dir" claude "$@"
+  else
+    env -u CLAUDE_CONFIG_DIR claude "$@"
+  fi
+}
+
+# install_plugins_into <config-dir> <plugin>...
+install_plugins_into() {
+  local config_dir="$1" installed plugin
+  shift
+  installed="$(claude_in "$config_dir" plugin list 2>/dev/null || true)"
+  for plugin in "$@"; do
+    if grep -qF "$plugin" <<<"$installed"; then
+      continue
+    fi
+    info "Installing Claude Code plugin $plugin${config_dir:+ into $config_dir}"
+    claude_in "$config_dir" plugin install "$plugin" || warn "Failed to install $plugin"
+  done
+}
+
 install_claude_plugins() {
   command -v claude >/dev/null 2>&1 || {
     warn "claude not on PATH — skipping Claude Code plugins."
     return
   }
-  local installed plugin
-  installed="$(claude plugin list 2>/dev/null || true)"
-  for plugin in "${CLAUDE_PLUGINS[@]}"; do
-    if grep -qF "$plugin" <<<"$installed"; then
-      continue
-    fi
-    info "Installing Claude Code plugin $plugin"
-    claude plugin install "$plugin" || warn "Failed to install $plugin"
-  done
+  install_plugins_into "" "${CLAUDE_PLUGINS[@]}"
+  install_plugins_into "$HOME/.claude-personal" "${CLAUDE_PERSONAL_PLUGINS[@]}"
 }
 
 main() {

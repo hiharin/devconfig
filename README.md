@@ -115,8 +115,9 @@ account's credentials, settings, and MCP config fully isolated from the default
 Switching requires a new `claude` process — there's no live in-session switch.
 
 `bootstrap.sh` also installs the Claude Code plugins listed in its `CLAUDE_PLUGINS`
-array (currently `mattpocock-skills@claude-plugins-official`) into the default
-profile. Add entries there to install more; already-installed ones are skipped.
+array into the default profile, and those in `CLAUDE_PERSONAL_PLUGINS` into the
+`claude-personal` profile (both currently `mattpocock-skills@claude-plugins-official`).
+Add entries there to install more; already-installed ones are skipped.
 
 ## Shell integration
 
