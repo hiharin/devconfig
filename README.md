@@ -114,6 +114,10 @@ account's credentials, settings, and MCP config fully isolated from the default
 `claude-personal` for the personal account (first run prompts `/login`).
 Switching requires a new `claude` process — there's no live in-session switch.
 
+`bootstrap.sh` also installs the Claude Code plugins listed in its `CLAUDE_PLUGINS`
+array (currently `mattpocock-skills@claude-plugins-official`) into the default
+profile. Add entries there to install more; already-installed ones are skipped.
+
 ## Shell integration
 
 `shell/.config/devconfig/shell-integration.sh` is sourced from `~/.zshrc` and

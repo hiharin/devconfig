@@ -5,6 +5,7 @@
 #   3. stow the packages    — symlink configs into $HOME
 #   4. ensure the shell rc file (~/.zshrc or ~/.bashrc, per $SHELL) sources
 #      the devconfig shell snippets
+#   5. install the Claude Code plugins listed in CLAUDE_PLUGINS
 #
 # Safe to re-run. Pass package names to limit stow scope:  ./bootstrap.sh nvim tmux
 #
@@ -149,12 +150,34 @@ ensure_rc_source() {
   done
 }
 
+# Claude Code plugins (plugin@marketplace) to install into the default profile.
+CLAUDE_PLUGINS=(
+  mattpocock-skills@claude-plugins-official
+)
+
+install_claude_plugins() {
+  command -v claude >/dev/null 2>&1 || {
+    warn "claude not on PATH — skipping Claude Code plugins."
+    return
+  }
+  local installed plugin
+  installed="$(claude plugin list 2>/dev/null || true)"
+  for plugin in "${CLAUDE_PLUGINS[@]}"; do
+    if grep -qF "$plugin" <<<"$installed"; then
+      continue
+    fi
+    info "Installing Claude Code plugin $plugin"
+    claude plugin install "$plugin" || warn "Failed to install $plugin"
+  done
+}
+
 main() {
   ensure_brew
   brew_bundle
   is_linux && install_wezterm_linux
   stow_packages
   ensure_rc_source .claude-profiles.sh .config/devconfig/shell-integration.sh
+  install_claude_plugins
 
   info "Done. Open a new shell (or 'source $(rc_file)') to pick up changes."
   command -v nvim >/dev/null 2>&1 &&
